@@ -1,0 +1,33 @@
+# Environment & secrets
+.env
+*.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+env/
+*.egg-info/
+
+# ML model weights (large binary files)
+backend/weights/
+*.pt
+*.pth
+*.onnx
+
+# Uploaded files (runtime data, not source)
+backend/uploads/
+frontend/assets/sample.jpg
+frontend/assets/test2.JPG
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# OS
+.DS_Store
+Thumbs.db

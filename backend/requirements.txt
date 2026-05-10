@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+python-multipart
+pymysql
+python-dotenv
+ultralytics
+opencv-python
+cryptography
+pillow

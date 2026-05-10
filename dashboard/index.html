@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MonBin Monitoring</title>
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body>
+  <div class="dashboard-shell">
+
+    <aside class="sidebar">
+      <div class="brand-block">
+        <div class="brand-badge">MB</div>
+        <div>
+          <h1>MonBin</h1>
+          <p>Monitoring Dashboard</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#overview">Ерөнхий мэдээлэл</a>
+        <a href="#analytics">Аналитик</a>
+        <a href="#bins">Хогийн сав</a>
+        <a href="#logs">Танилтын бүртгэл</a>
+        <a href="#events">Системийн ажиллагаа</a>
+        <a href="#fleet">Прототип</a>
+      </nav>
+
+      <div class="sidebar-status">
+        <p class="status-label">System Mode</p>
+        <div class="status-pill online">Live Prototype</div>
+      </div>
+    </aside>
+
+    <main class="dashboard-main">
+
+      <header class="dashboard-header">
+        <div>
+          <p class="eyebrow">Хог хаягдал ангилах ухаалаг системийн хянах</p>
+          <h2>Системийн ерөнхий мэдээлэл</h2>
+        </div>
+        <div class="header-actions">
+          <button id="refreshBtn" class="ghost-btn">Шинэчлэх</button>
+          <button id="exportBtn" class="primary-btn">Export CSV</button>
+        </div>
+      </header>
+
+      <!-- Summary -->
+      <section class="summary-grid" id="overview">
+        <div class="summary-card">
+          <p>Нийт танилт</p>
+          <h3 id="totalDetections">0</h3>
+        </div>
+        <div class="summary-card">
+          <p>Өнөөдөр</p>
+          <h3 id="todayDetections">0</h3>
+        </div>
+        <div class="summary-card">
+          <p>Амжилттай ангилсан</p>
+          <h3 id="successfulSorts">0</h3>
+          <div class="metric-sub" id="successRateText"></div>
+        </div>
+        <div class="summary-card">
+          <p>Дундаж итгэлцэл</p>
+          <h3 id="avgConfidence">—</h3>
+        </div>
+        <div class="summary-card">
+          <p>Санал хүсэлтийн нарийвчлал</p>
+          <h3 id="feedbackSummary">—</h3>
+          <div class="metric-sub" id="feedbackSubText"></div>
+        </div>
+        <div class="summary-card">
+          <p>Системийн үйл ажиллагаа</p>
+          <h3 id="totalEvents">0</h3>
+        </div>
+      </section>
+
+      <!-- Analytics charts -->
+      <section class="panel" id="analytics">
+        <div class="panel-head">
+          <h3>Анализ</h3>
+          <p>Ангиллын харьцаа болон танилтын статус</p>
+        </div>
+        <div class="analytics-grid">
+          <div class="chart-box">
+            <h4 class="chart-title">Хогийн савны хуваарилалт</h4>
+            <div class="chart-wrap">
+              <canvas id="binDistChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-box">
+            <h4 class="chart-title">Танилтын статус</h4>
+            <div class="chart-wrap">
+              <canvas id="statusChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bin stats -->
+      <section class="panel" id="bins">
+        <div class="panel-head">
+          <h3>Хогийн савны мэдээлэл</h3>
+          <p>Хогийн савны дүүргэлт болон ашиглалт</p>
+        </div>
+        <div class="bin-stat-grid" id="binStatsGrid"></div>
+      </section>
+
+      <!-- Detection logs -->
+      <section class="panel" id="logs">
+        <div class="panel-head">
+          <h3>Танилтын бүртгэл</h3>
+          <p>Сүүлийн ангиллын бүртгэл</p>
+        </div>
+
+        <div class="table-toolbar">
+          <select id="logStatusFilter" class="toolbar-input">
+            <option value="all">Бүх төлөв</option>
+            <option value="detected">Илэрсэн</option>
+            <option value="unsupported">Дэмжигдээгүй</option>
+            <option value="multiple_items">Олон зүйл</option>
+            <option value="no_detection">Илрээгүй</option>
+          </select>
+          <select id="logBinFilter" class="toolbar-input">
+            <option value="all">Бүх сав</option>
+            <option value="plastic">Хуванцар</option>
+            <option value="paper">Цаас</option>
+            <option value="can">Лааз</option>
+            <option value="general">Бусад</option>
+          </select>
+          <select id="logSortField" class="toolbar-input">
+            <option value="created_at">Цагаар эрэмбэлэх</option>
+            <option value="confidence">Итгэлцлээр эрэмбэлэх</option>
+          </select>
+          <button id="exportLogsBtn" class="ghost-btn">CSV татах</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Илэрсэн ангилал</th>
+                <th>Итгэлцэл</th>
+                <th>Зорилтот сав</th>
+                <th>Төлөв</th>
+                <th>Цаг</th>
+              </tr>
+            </thead>
+            <tbody id="logsTableBody"></tbody>
+          </table>
+        </div>
+        <div id="logDetailPanel" class="detail-panel hidden"></div>
+      </section>
+
+      <!-- System events -->
+      <section class="panel" id="events">
+        <div class="panel-head">
+          <h3>Системийн үйл ажиллагаа</h3>
+          <p>Анхааруулга, онцгой нөхцөл болон илэрсэн асуудлууд</p>
+        </div>
+
+        <div class="table-toolbar">
+          <select id="eventTypeFilter" class="toolbar-input">
+            <option value="all">Бүх төрөл</option>
+            <option value="warning">Илэрцгүй</option>
+            <option value="error">Олон объект</option>
+            <option value="info">Хогийн сав олдоогүй</option>
+          </select>
+          <button id="exportEventsBtn" class="ghost-btn">CSV татах</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Үйл явдлын төрөл</th>
+                <th>Мэдэгдэл</th>
+                <th>Холбоотой танилт</th>
+                <th>Цаг</th>
+              </tr>
+            </thead>
+            <tbody id="eventsTableBody"></tbody>
+          </table>
+        </div>
+        <div id="eventDetailPanel" class="detail-panel hidden"></div>
+      </section>
+
+      <!-- Fleet -->
+      <section class="panel" id="fleet">
+        <div class="panel-head">
+          <h3>Прототип төхөөрөмж</h3>
+          <p>Нэг идэвхтэй прототип + хоёр симуляц</p>
+        </div>
+
+        <div class="fleet-grid">
+          <div class="fleet-card live">
+            <div class="fleet-top">
+              <h4>Прототип төхөөрөмж</h4>
+              <span class="live-tag">Live</span>
+            </div>
+            <p>Одоогийн мэдээллийн санд холбогдсон үндсэн туршилтын төхөөрөмж</p>
+            <div class="fleet-meta">
+              <span>Байршил: Demo</span>
+              <span>Статус: Online</span>
+            </div>
+          </div>
+          <div class="fleet-card">
+            <div class="fleet-top">
+              <h4>Хогийн сав B</h4>
+              <span class="sim-tag">Sim</span>
+            </div>
+            <p>Симуляцийн төхөөрөмж</p>
+            <div class="fleet-meta">
+              <span>Байршил: Номын сан</span>
+              <span>Статус: Offline</span>
+            </div>
+          </div>
+          <div class="fleet-card">
+            <div class="fleet-top">
+              <h4>Хогийн сав C</h4>
+              <span class="sim-tag">Sim</span>
+            </div>
+            <p>Симуляцийн төхөөрөмж</p>
+            <div class="fleet-meta">
+              <span>Байршил: Худалдааны төв</span>
+              <span>Статус: Offline</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
