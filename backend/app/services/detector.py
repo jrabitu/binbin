@@ -1,51 +1,57 @@
 from ultralytics import YOLO
-from app.core.config import MODEL_PATH
+from app.core.config import YOLO_MODEL_PATH, YOLO_MIN_CONFIDENCE
 
-model = YOLO(MODEL_PATH)
+yolo_model = YOLO(YOLO_MODEL_PATH)
 
 
 def _empty_result(image_path: str):
     return {
-        "detected_class": None,
-        "confidence": 0.0,
-        "detected_count": 0,
         "image_path": image_path,
-        "detections": []
+        "detected_count": 0,
+        "detections": [],
+        "best_detection": None,
     }
 
 
 def run_detection(image_path: str):
     try:
-        results = model(image_path)
-    except Exception as e:
-        print(f"detection error: {e}")
+        results = yolo_model(image_path, conf=YOLO_MIN_CONFIDENCE)
+    except Exception as error:
+        print(f"YOLO detection error: {error}")
         return _empty_result(image_path)
 
     result = results[0]
     boxes = result.boxes
-    detected_count = len(boxes)
 
-    if detected_count == 0:
+    if boxes is None or len(boxes) == 0:
         return _empty_result(image_path)
 
     detections = []
-    for box in boxes:
+
+    for index, box in enumerate(boxes):
         class_id = int(box.cls[0])
         confidence = float(box.conf[0])
-        class_name = model.names[class_id]
+        class_name = yolo_model.names[class_id]
+
+        x1, y1, x2, y2 = box.xyxy[0].tolist()
 
         detections.append({
-            "detected_class": class_name,
-            "confidence": confidence
+            "index": index,
+            "yolo_class": class_name,
+            "yolo_confidence": confidence,
+            "bbox": {
+                "x1": float(x1),
+                "y1": float(y1),
+                "x2": float(x2),
+                "y2": float(y2),
+            },
         })
 
-    detections.sort(key=lambda x: x["confidence"], reverse=True)
-    best_detection = detections[0]
+    detections.sort(key=lambda item: item["yolo_confidence"], reverse=True)
 
     return {
-        "detected_class": best_detection["detected_class"],
-        "confidence": best_detection["confidence"],
-        "detected_count": detected_count,
         "image_path": image_path,
-        "detections": detections
+        "detected_count": len(detections),
+        "detections": detections,
+        "best_detection": detections[0],
     }

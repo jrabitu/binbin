@@ -4,7 +4,9 @@ from app.services.dashboard_service import (
     get_bin_stats,
     get_recent_logs,
     get_recent_events,
-    get_feedback_summary
+    get_feedback_summary,
+    get_trashcan_overview,
+    get_trashcan_detail,
 )
 
 router = APIRouter()
@@ -14,7 +16,32 @@ router = APIRouter()
 def dashboard_summary():
     return {
         "success": True,
-        "data": get_summary_data()
+        "data": get_summary_data(),
+    }
+
+
+@router.get("/dashboard/trashcans")
+def dashboard_trashcans():
+    return {
+        "success": True,
+        "data": get_trashcan_overview(),
+    }
+
+
+@router.get("/dashboard/trashcans/{trashcan_id}")
+def dashboard_trashcan_detail(trashcan_id: int):
+    detail = get_trashcan_detail(trashcan_id)
+
+    if not detail:
+        return {
+            "success": False,
+            "message": "trashcan not found",
+            "data": None,
+        }
+
+    return {
+        "success": True,
+        "data": detail,
     }
 
 
@@ -22,7 +49,7 @@ def dashboard_summary():
 def dashboard_bin_stats():
     return {
         "success": True,
-        "data": get_bin_stats()
+        "data": get_bin_stats(),
     }
 
 
@@ -30,7 +57,7 @@ def dashboard_bin_stats():
 def dashboard_logs():
     return {
         "success": True,
-        "data": get_recent_logs(12)
+        "data": get_recent_logs(12),
     }
 
 
@@ -38,7 +65,7 @@ def dashboard_logs():
 def dashboard_events():
     return {
         "success": True,
-        "data": get_recent_events(12)
+        "data": get_recent_events(12),
     }
 
 
@@ -46,5 +73,5 @@ def dashboard_events():
 def dashboard_feedback_summary():
     return {
         "success": True,
-        "data": get_feedback_summary()
+        "data": get_feedback_summary(),
     }

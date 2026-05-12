@@ -24,7 +24,7 @@ def get_bin_by_type(bin_type):
     connection = get_connection()
     try:
         with connection.cursor() as cursor:
-            sql = "SELECT * FROM bins WHERE bin_type = %s AND status = 'active' LIMIT 1"
+            sql = "SELECT * FROM bins WHERE bin_type = %s AND status IN ('active', 'near_full') LIMIT 1"
             cursor.execute(sql, (bin_type,))
             return cursor.fetchone()
     finally:
@@ -106,12 +106,43 @@ def increment_bin_item_count(target_bin_id):
     connection = get_connection()
     try:
         with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT item_count, capacity FROM bins WHERE id = %s",
+                (target_bin_id,)
+            )
+            bin_row = cursor.fetchone()
+
+            if not bin_row:
+                return
+
+            new_item_count = bin_row["item_count"] + 1
+            capacity = bin_row["capacity"] or 1
+            fill_percent = round((new_item_count / capacity) * 100)
+
+            if fill_percent > 100:
+                fill_percent = 100
+
+            if fill_percent >= 100:
+                bin_status = "full"
+            elif fill_percent >= 80:
+                bin_status = "near_full"
+            else:
+                bin_status = "active"
+
             sql = """
                 UPDATE bins
-                SET item_count = item_count + 1
+                SET item_count = %s,
+                    current_fill_level = %s,
+                    status = %s,
+                    updated_at = NOW()
                 WHERE id = %s
             """
-            cursor.execute(sql, (target_bin_id,))
+            cursor.execute(sql, (
+                new_item_count,
+                fill_percent,
+                bin_status,
+                target_bin_id
+            ))
             connection.commit()
     finally:
         connection.close()

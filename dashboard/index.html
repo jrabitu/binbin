@@ -190,47 +190,62 @@
 
       <!-- Fleet -->
       <section class="panel" id="fleet">
-        <div class="panel-head">
-          <h3>Прототип төхөөрөмж</h3>
-          <p>Нэг идэвхтэй прототип + хоёр симуляц</p>
+  <div class="panel-head">
+    <h3>Хогийн савны төхөөрөмжүүд</h3>
+    <p>Нэг бодит төхөөрөмж болон хоёр симуляцийн төхөөрөмж</p>
+  </div>
+
+  <div class="fleet-grid" id="trashcanGrid"></div>
+</section>
+
+<section class="panel hidden" id="trashcanDetailPanel">
+      <div class="panel-head detail-head-row">
+        <div>
+          <h3 id="detailTrashcanName">Төхөөрөмжийн дэлгэрэнгүй</h3>
+          <p id="detailTrashcanLocation">—</p>
+        </div>
+        <button class="ghost-btn" id="closeTrashcanDetailBtn">Буцах</button>
+      </div>
+
+      <div class="bin-stat-grid" id="detailBinGrid"></div>
+
+      <div class="detail-two-col">
+        <div>
+          <h4 class="mini-section-title">Сүүлийн танилтууд</h4>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Ангилал</th>
+                  <th>Сав</th>
+                  <th>Төлөв</th>
+                  <th>Цаг</th>
+                </tr>
+              </thead>
+              <tbody id="detailLogsBody"></tbody>
+            </table>
+          </div>
         </div>
 
-        <div class="fleet-grid">
-          <div class="fleet-card live">
-            <div class="fleet-top">
-              <h4>Прототип төхөөрөмж</h4>
-              <span class="live-tag">Live</span>
-            </div>
-            <p>Одоогийн мэдээллийн санд холбогдсон үндсэн туршилтын төхөөрөмж</p>
-            <div class="fleet-meta">
-              <span>Байршил: Demo</span>
-              <span>Статус: Online</span>
-            </div>
-          </div>
-          <div class="fleet-card">
-            <div class="fleet-top">
-              <h4>Хогийн сав B</h4>
-              <span class="sim-tag">Sim</span>
-            </div>
-            <p>Симуляцийн төхөөрөмж</p>
-            <div class="fleet-meta">
-              <span>Байршил: Номын сан</span>
-              <span>Статус: Offline</span>
-            </div>
-          </div>
-          <div class="fleet-card">
-            <div class="fleet-top">
-              <h4>Хогийн сав C</h4>
-              <span class="sim-tag">Sim</span>
-            </div>
-            <p>Симуляцийн төхөөрөмж</p>
-            <div class="fleet-meta">
-              <span>Байршил: Худалдааны төв</span>
-              <span>Статус: Offline</span>
-            </div>
+        <div>
+          <h4 class="mini-section-title">Системийн үйл явдал</h4>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Төрөл</th>
+                  <th>Мэдэгдэл</th>
+                  <th>Цаг</th>
+                </tr>
+              </thead>
+              <tbody id="detailEventsBody"></tbody>
+            </table>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
     </main>
   </div>

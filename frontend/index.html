@@ -383,36 +383,33 @@
         Буцах
       </button>
 
-      <div class="detail-header">
-        <div class="bin-detail-icon" id="detailOrbEl">
+      <!-- Hero -->
+      <div class="bdet-hero">
+        <div class="bdet-orb" id="detailOrbEl">
           <img id="detailIcon" src="" alt="bin">
         </div>
-
-        <div>
-          <h2 class="screen-title" id="detailTitle">—</h2>
-          <p class="detail-sub" id="detailSub">—</p>
+        <div class="bdet-hero-info">
+          <span class="bdet-type-tag" id="detailTypeTag">—</span>
+          <h2 class="bdet-title" id="detailTitle">—</h2>
+          <p class="bdet-sub" id="detailSub">—</p>
         </div>
       </div>
 
-      <div class="detail-stats-card">
-        <div class="detail-stat-box">
-          <div class="detail-stat-number" id="detailItemCount">0</div>
-          <div class="detail-stat-label">Нийт ангилагдсан</div>
-        </div>
+      <!-- Today count -->
+      <div class="bdet-stat-box bdet-stat-single">
+        <div class="bdet-stat-val" id="detailItemCount">0</div>
+        <div class="bdet-stat-lbl">Өнөөдөр цуглуулсан (ширхэг)</div>
       </div>
 
-      <div class="impact-card">
-        <div class="impact-icon-wrap">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" width="20" height="20">
-            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
-            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
-          </svg>
-        </div>
+      <!-- Purpose -->
+      <div class="bdet-impact-card">
+        <p id="detailPurposeText">—</p>
+      </div>
 
-        <div>
-          <h3>Байгаль орчинд үзүүлэх нөлөө</h3>
-          <p id="detailImpactText">—</p>
-        </div>
+      <!-- Tips -->
+      <div class="bdet-tips">
+        <h4 class="bdet-tips-title">Зөв ангилах зөвлөгөө</h4>
+        <ul class="bdet-tips-list" id="detailTipsList"></ul>
       </div>
     </section>
 
@@ -474,10 +471,10 @@
           </div>
 
           <h3>Мэдээлэл</h3>
-          <div class="donate-row"><span class="donate-label">Банк</span><span class="donate-value">Хаан банк</span></div>
+          <div class="donate-row"><span class="donate-label">Банк</span><span class="donate-value">**** ****</span></div>
           <div class="donate-row"><span class="donate-label">Данс</span><span class="donate-value mono">**** **** ****</span></div>
           <div class="donate-row"><span class="donate-label">Нэр</span><span class="donate-value">MonBin Project</span></div>
-          <p class="donate-note">Гүйлгээний утга: MonBin дэмжлэг</p>
+          <p class="donate-note">Утга: MonBin дэмжлэг</p>
         </div>
 
         <div class="donate-card">
