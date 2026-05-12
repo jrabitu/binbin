@@ -164,8 +164,12 @@ function showScreen(name) {
     fetchBinStatus();
   }
 
-  if (name !== "result") {
+  if (name !== "result" && name !== "error") {
     clearAutoReturnTimer();
+  }
+
+  if (name === "error") {
+    startAutoReturn(10);
   }
 }
 
